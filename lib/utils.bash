@@ -63,7 +63,7 @@ install_version() {
 		chmod +x "$install_path/$TOOL_NAME"
 
 		# TODO: Assert ls-lint executable exists.
-		test -x "$install_path/$TOOL_NAME" || fail "Expected $install_path/$TOOL_NAME to be executable."
+		test -x "$install_path/$TOOL_TEST" || fail "Expected $install_path/$TOOL_NAME to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
