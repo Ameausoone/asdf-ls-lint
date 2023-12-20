@@ -47,6 +47,8 @@ download_release() {
 }
 
 install_version() {
+	# debug
+	set -x
 	local install_type="$1"
 	local version="$2"
 	local install_path="${3%/bin}/bin"
@@ -58,7 +60,7 @@ install_version() {
 	(
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
-		chmod +x "$install_path"/*
+		chmod +x "$install_path/$tool_cmd"
 
 		# TODO: Assert ls-lint executable exists.
 		local tool_cmd
@@ -70,4 +72,5 @@ install_version() {
 		rm -rf "$install_path"
 		fail "An error occurred while installing $TOOL_NAME $version."
 	)
+	set +x
 }
