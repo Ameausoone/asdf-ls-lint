@@ -35,15 +35,23 @@ list_all_versions() {
 }
 
 download_release() {
-	local version filename url
-	version="$1"
-	filename="$2"
+    local version filename url arch platform
+    version="$1"
+    filename="$2"
 
-	# TODO: Adapt the release URL convention for ls-lint
-	url="$GH_REPO/archive/v${version}.tar.gz"
+    arch=$(uname -m)
+    case $arch in
+        arm64) arch="arm64";; # m1 macs
+        aarch64) arch="arm64";;
+        *) arch="amd64";;
+    esac
+    platform="$(uname | tr '[:upper:]' '[:lower:]')-${arch}"
 
-	echo "* Downloading $TOOL_NAME release $version..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+    # Adapt the release URL convention for ls-lint
+    url="$GH_REPO/releases/download/${version}/ls-lint-${platform}"
+
+    echo "* Downloading $TOOL_NAME release $version..."
+    curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
