@@ -67,7 +67,7 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 		chmod +x "$install_path/$TOOL_NAME"
-
+		$install_path/$TOOL_TEST
 		# TODO: Assert ls-lint executable exists.
 		test -x "$install_path/$TOOL_TEST" || fail "Expected $install_path/$TOOL_NAME to be executable."
 
