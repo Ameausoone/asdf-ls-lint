@@ -46,9 +46,8 @@ download_release() {
         *) arch="amd64";;
     esac
     platform="$(uname | tr '[:upper:]' '[:lower:]')-${arch}"
-
     # Adapt the release URL convention for ls-lint
-    url="$GH_REPO/releases/download/${version}/ls-lint-${platform}"
+    url="$GH_REPO/releases/download/v${version}/ls-lint-${platform}"
 
     echo "* Downloading $TOOL_NAME release $version..."
     curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
