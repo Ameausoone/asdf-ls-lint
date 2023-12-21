@@ -4,7 +4,7 @@ set -euo pipefail
 
 GH_REPO="https://github.com/loeffel-io/ls-lint"
 TOOL_NAME="ls-lint"
-TOOL_TEST="ls-lint -h"
+TOOL_TEST="ls-lint"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -67,9 +67,9 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 		chmod +x "$install_path/$TOOL_NAME"
-		$install_path/$TOOL_TEST
+
 		# TODO: Assert ls-lint executable exists.
-		test -x "$install_path/$TOOL_TEST" || fail "Expected $install_path/$TOOL_NAME to be executable."
+		test -x "$install_path/$TOOL_NAME" || fail "Expected $install_path/$TOOL_NAME to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
