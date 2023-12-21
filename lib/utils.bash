@@ -4,7 +4,7 @@ set -euo pipefail
 
 GH_REPO="https://github.com/loeffel-io/ls-lint"
 TOOL_NAME="ls-lint"
-TOOL_TEST="ls-lint -h"
+TOOL_TEST="ls-lint"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -35,18 +35,26 @@ list_all_versions() {
 }
 
 download_release() {
-	local version filename url
+	local version filename url arch platform
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for ls-lint
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	arch=$(uname -m)
+	case $arch in
+	arm64) arch="arm64" ;; # m1 macs
+	aarch64) arch="arm64" ;;
+	*) arch="amd64" ;;
+	esac
+	platform="$(uname | tr '[:upper:]' '[:lower:]')-${arch}"
+	# Adapt the release URL convention for ls-lint
+	url="$GH_REPO/releases/download/v${version}/ls-lint-${platform}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
+	# debug
 	local install_type="$1"
 	local version="$2"
 	local install_path="${3%/bin}/bin"
@@ -58,12 +66,10 @@ install_version() {
 	(
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
-		chmod +x "$install_path"/*
+		chmod +x "$install_path/$TOOL_NAME"
 
 		# TODO: Assert ls-lint executable exists.
-		local tool_cmd
-		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		test -x "$install_path/$TOOL_NAME" || fail "Expected $install_path/$TOOL_NAME to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
